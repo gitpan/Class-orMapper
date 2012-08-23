@@ -1,18 +1,17 @@
 package Class::orMapper;
-
 use strict;
 use warnings;
 use DBI;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 NAME
 
-orMapper - Easy O/R Mapper for DBI base.
+orMapper - DBI base easy O/R Mapper.
 
 =head1 SYNOPSIS
 
-use orMapper;
+ use orMapper;
  my $read_database = {
     dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
     uid => 'user_id',
@@ -29,12 +28,15 @@ use orMapper;
 
 =head1 DESCRIPTION
 
- This Module is easy database operation module.
+This Module is easy database operation module.
 
-=item Usage
+=head1 Usage
 
  my $data = $db->select_n_arrayref($sql,$value); # $data is Array Reference.
  my $data = $db->select_n_hashref($sql,$value);  # $data is Hash Reference.
+
+ use Data::Dumper;
+ warn Dumper($data);
 
  $sql  : SQL(Strings)
  $value: Bind variable with Array Reference.
@@ -43,6 +45,9 @@ use orMapper;
 
  my $data = $db->select_arrayref($param);
  my $data = $db->select_hashref($param);
+
+ warn Dumper($data);
+
  $param : SQL parameter
  parameter format:
  $param = {
@@ -55,7 +60,7 @@ use orMapper;
     order => {'yyy' => 'desc', 'zzz' => 'asc'},
  };
 
- $db->insert($p);
+ $db->insert($param);
  $param : SQL parameter
  parameter format:
  $param = {
@@ -67,7 +72,7 @@ use orMapper;
     },
  };
 
- $db->update($p);
+ $db->update($param);
  $param : SQL parameter
  parameter format:
  $param = {
@@ -83,7 +88,7 @@ use orMapper;
     ],
  };	
 
- $db->delete($p);
+ $db->delete($param);
  $param : SQL parameter
  parameter format:
  $param = {
@@ -94,7 +99,7 @@ use orMapper;
     ],
  };
 
- $db->truncate($p);
+ $db->truncate($param);
  $param : SQL parameter
  parameter format:
  $param = {
