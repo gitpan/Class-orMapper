@@ -1,105 +1,108 @@
 package Class::orMapper;
-BEGIN{
-	$Clas::orMapper = '0.01';
-}
 
 use strict;
 use warnings;
 use DBI;
 
+our $VERSION = '0.02';
+
 =head1 NAME
+
 orMapper - Easy O/R Mapper for DBI base.
 
 =head1 SYNOPSIS
 
 use orMapper;
-my $read_database = {
-	dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
-	uid => 'user_id',
-	pwd => 'password',
-	opt => {AutoCommit => 0},
-};
-my $write_database = {
-	dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
-	uid => 'user_id',
-	pwd => 'password',
-	opt => {AutoCommit => 0},
-};
-my $db = new orMapper($read_database, $write_database);
+ my $read_database = {
+    dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
+    uid => 'user_id',
+    pwd => 'password',
+    opt => {AutoCommit => 0},
+ };
+ my $write_database = {
+    dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
+    uid => 'user_id',
+    pwd => 'password',
+    opt => {AutoCommit => 0},
+ };
+ my $db = new orMapper($read_database, $write_database);
 
 =head1 DESCRIPTION
-This Module is easy database operation module.
+
+ This Module is easy database operation module.
 
 =item Usage
-my $data = $db->select_n_arrayref($sql,$value); # $data is Array Reference.
-my $data = $db->select_n_hashref($sql,$value);  # $data is Hash Reference.
 
-$sql  : SQL(Strings)
-$value: Bind variable with Array Reference.
-ex.) my $sql = "select * from test where hoge=?";
-     my $value = [qw/abc/];
+ my $data = $db->select_n_arrayref($sql,$value); # $data is Array Reference.
+ my $data = $db->select_n_hashref($sql,$value);  # $data is Hash Reference.
 
-my $data = $db->select_arrayref($param);
-my $data = $db->select_hashref($param);
-$param : SQL parameter
-parameter format:
-$param = {
-	table => 'table_name',
-	columns => [aaa,bbb,ccc],
-	where => [
-		{xxx => {'=' => 'value1', '>' => 'value2'}},
-		{xxx => [qw/abc def cfg/],
-	],
-	order => {'yyy' => 'desc', 'zzz' => 'asc'},
-};
+ $sql  : SQL(Strings)
+ $value: Bind variable with Array Reference.
+ ex.) my $sql = "select * from test where hoge=?";
+      my $value = [qw/abc/];
 
-$db->insert($p);
-$param : SQL parameter
-parameter format:
-$param = {
-	table => 'table_name',
-	columns => {
-		aaa => 'bbb',
-		ccc => 'ddd',
-		eee => 'fff',
-	},
-};
+ my $data = $db->select_arrayref($param);
+ my $data = $db->select_hashref($param);
+ $param : SQL parameter
+ parameter format:
+ $param = {
+    table => 'table_name',
+    columns => [aaa,bbb,ccc],
+    where => [
+        {xxx => {'=' => 'value1', '>' => 'value2'}},
+        {xxx => [qw/abc def cfg/],
+    ],
+    order => {'yyy' => 'desc', 'zzz' => 'asc'},
+ };
 
-$db->update($p);
-$param : SQL parameter
-parameter format:
-$param = {
-	table => 'table_name',
-	columns => {
-		aaa => 'bbb',
-		ccc => 'ddd',
-		eee => 'fff',
-	},
-	where => [
-		{xxx => {'=' => 'value1', '>' => 'value2'}},
-		{xxx => [qw/abc def cfg/],
-	],
-};	
+ $db->insert($p);
+ $param : SQL parameter
+ parameter format:
+ $param = {
+    table => 'table_name',
+    columns => {
+        aaa => 'bbb',
+        ccc => 'ddd',
+        eee => 'fff',
+    },
+ };
 
-$db->delete($p);
-$param : SQL parameter
-parameter format:
-$param = {
-	table => 'table_name',
-	where => [
-		{xxx => {'=' => 'value1', '>' => 'value2'}},
-		{xxx => [qw/abc def cfg/],
-	],
-};
+ $db->update($p);
+ $param : SQL parameter
+ parameter format:
+ $param = {
+    table => 'table_name',
+    columns => {
+        aaa => 'bbb',
+        ccc => 'ddd',
+        eee => 'fff',
+    },
+    where => [
+        {xxx => {'=' => 'value1', '>' => 'value2'}},
+        {xxx => [qw/abc def cfg/],
+    ],
+ };	
 
-$db->truncate($p);
-$param : SQL parameter
-parameter format:
-$param = {
-	table => 'table_name',
-};
+ $db->delete($p);
+ $param : SQL parameter
+ parameter format:
+ $param = {
+    table => 'table_name',
+    where => [
+        {xxx => {'=' => 'value1', '>' => 'value2'}},
+        {xxx => [qw/abc def cfg/],
+    ],
+ };
+
+ $db->truncate($p);
+ $param : SQL parameter
+ parameter format:
+ $param = {
+    table => 'table_name',
+ };
 
 =head1 Copyright
+
 Kazunori Minoda (c)2012
 
 =cut
@@ -259,3 +262,4 @@ sub where{
 }
 
 1;
+

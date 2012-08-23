@@ -4,3 +4,4 @@ MANIFEST
 README
 t/Class-orMapper.t
 lib/Class/orMapper.pm
+META.yml                                 Module meta-data (added by MakeMaker)
