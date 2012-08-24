@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use DBI;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -11,7 +11,7 @@ orMapper - DBI base easy O/R Mapper.
 
 =head1 SYNOPSIS
 
- use orMapper;
+ use Class::orMapper;
  my $read_database = {
     dsn => 'dbi:xxxx:dbname=xxxx;host=localhost;port=xxxx',
     uid => 'xxxx',
