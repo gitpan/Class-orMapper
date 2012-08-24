@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use DBI;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -13,18 +13,28 @@ orMapper - DBI base easy O/R Mapper.
 
  use orMapper;
  my $read_database = {
-    dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
-    uid => 'user_id',
-    pwd => 'password',
+    dsn => 'dbi:xxxx:dbname=xxxx;host=localhost;port=xxxx',
+    uid => 'xxxx',
+    pwd => 'xxxx',
     opt => {AutoCommit => 0},
  };
  my $write_database = {
-    dsn => 'dbi:mysql:dbname=xxxx;host=localhost;port=3306',
-    uid => 'user_id',
-    pwd => 'password',
+    dsn => 'dbi:xxxx:dbname=xxxx;host=localhost;port=xxxx',
+    uid => 'xxxx',
+    pwd => 'xxxx',
     opt => {AutoCommit => 0},
  };
- my $db = new orMapper($read_database, $write_database);
+ my $db = new Class::orMapper($read_database, $write_database);
+ my $data = $db->select_arrayref({
+ 	table => 'xxxx',
+ 	columns => [qw/aaa bbb ccc/],
+ 	where => [
+ 		{aaa => {'=' => 'dddd'}},
+ 	],
+ 	order => {'bbb' => 'desc'},
+ });
+ use Data::Dumper;
+ warn Dumper($data);
 
 =head1 DESCRIPTION
 
@@ -35,9 +45,6 @@ This Module is easy database operation module.
  my $data = $db->select_n_arrayref($sql,$value); # $data is Array Reference.
  my $data = $db->select_n_hashref($sql,$value);  # $data is Hash Reference.
 
- use Data::Dumper;
- warn Dumper($data);
-
  $sql  : SQL(Strings)
  $value: Bind variable with Array Reference.
  ex.) my $sql = "select * from test where hoge=?";
@@ -46,9 +53,6 @@ This Module is easy database operation module.
  my $data = $db->select_arrayref($param);
  my $data = $db->select_hashref($param);
 
- warn Dumper($data);
-
- $param : SQL parameter
  parameter format:
  $param = {
     table => 'table_name',
@@ -61,7 +65,7 @@ This Module is easy database operation module.
  };
 
  $db->insert($param);
- $param : SQL parameter
+ 
  parameter format:
  $param = {
     table => 'table_name',
@@ -73,7 +77,7 @@ This Module is easy database operation module.
  };
 
  $db->update($param);
- $param : SQL parameter
+
  parameter format:
  $param = {
     table => 'table_name',
@@ -89,7 +93,7 @@ This Module is easy database operation module.
  };	
 
  $db->delete($param);
- $param : SQL parameter
+
  parameter format:
  $param = {
     table => 'table_name',
@@ -100,7 +104,7 @@ This Module is easy database operation module.
  };
 
  $db->truncate($param);
- $param : SQL parameter
+
  parameter format:
  $param = {
     table => 'table_name',
@@ -138,7 +142,8 @@ sub select_n_arrayref{
 	$sth->execute(@{$v});
 	my @o;
 	while(my $r = $sth->fetchrow_arrayref){
-		push(@o, $r);
+		my @tmp = map{$_?$_:''} @{$r};
+		push(@o, \@tmp);
 	}
 	$sth->finish;
 	return \@o;
@@ -158,10 +163,13 @@ sub select_n_hashref{
 
 sub select_arrayref{
 	my ($self,$p) = @_;
-	my $sth = $self->select_base($p);
+	my ($s,@v) = $self->select_base($p);
+	my $sth = $self->{dbh_r}->prepare($s);
+	$sth->execute(@v);
 	my @o;
 	while(my $r = $sth->fetchrow_arrayref){
-		push(@o, $r);
+		my @tmp = map{$_?$_:''} @{$r};
+		push(@o, \@tmp);
 	}
 	$sth->finish;
 	return \@o;
@@ -169,7 +177,9 @@ sub select_arrayref{
 
 sub select_hashref{
 	my ($self,$p) = @_;
-	my $sth = $self->select_base($p);
+	my ($s,@v) = $self->select_base($p);
+	my $sth = $self->{dbh_r}->prepare($s);
+	$sth->execute(@v);
 	my @o;
 	while(my $r = $sth->fetchrow_hashref){
 		push(@o, $r);
@@ -242,9 +252,7 @@ sub select_base{
 		$o =~ s/^,//;
 		$s .= ' order by ' . $o;
 	}
-	my $sth = $self->{dbh_r}->prepare($s);
-	$sth->execute(@v);
-	return $sth;
+	return ($s,@v);
 }
 
 sub where{
@@ -267,4 +275,5 @@ sub where{
 }
 
 1;
+
 

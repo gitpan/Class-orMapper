@@ -1,6 +1,6 @@
 Revision history for Perl extension Class::orMapper.
 
-0.01  Thu Aug 23 09:31:40 2012
+0.01  Fri Aug 24 17:28:43 2012
 	- original version; created by h2xs 1.23 with options
-		-XAP --skip-exporter --use-new-tests -n Class::orMapper
+		-AX -n Class::orMapper
 
