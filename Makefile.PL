@@ -5,8 +5,10 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'Class::orMapper',
     VERSION_FROM      => 'lib/Class/orMapper.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
+    PREREQ_PM         => {
+	'DBI' => '1.627',
+    }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Class/orMapper.pm', # retrieve abstract from module
-       AUTHOR         => 'root <root@localdomain>') : ()),
+       AUTHOR         => 'Kazunori Minoda <kazunori@cpan.org>') : ()),
 );
